@@ -1,0 +1,70 @@
+<section class="content">
+    <div class="content-block">
+        <div class="block-header">
+            <app-breadcrumb [title]="'Profile'" [items]="[role.charAt(0).toUpperCase() + role.slice(1)]" [active_item]="'Profile'"></app-breadcrumb>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    @if (profileData) {
+                        <div class="contact-grid profile-image">
+                            <img [src]="userInfo?.profile_image?.changingThisBreaksApplicationSecurity" alt="Profile Photo">
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-12">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" aria-expanded="true">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                @if (profileData) {
+                                <div class="card">
+                                    <div class="header">
+                                        <h2>About {{role.charAt(0).toUpperCase() + role.slice(1)}}</h2>
+                                    </div>
+                                    <div class="tab-pane body active" id="about">
+                                        <p class="text-default">Lorem Ipsum is simply dummy text of the printing and
+                                            typesetting industry. Lorem Ipsum has
+                                            been the industry's standard dummy text ever since the 1500s, when an
+                                            unknown
+                                            printer
+                                            took a galley of type and scrambled it to make a type specimen book. It has
+                                            survived
+                                            not only five centuries, but also the leap into electronic typesetting,
+                                            remaining
+                                            essentially
+                                            unchanged.</p>
+                                        <small class="text-muted">Email address: </small>
+                                        <p>{{ profileData?.email || "--"}}</p>
+                                        <hr>
+                                        <small class="text-muted">Address: </small>
+                                        <p>345, Sarju Appt., Mota Varacha, Surat Gujarat, India.</p>
+                                        <hr>
+                                        <small class="text-muted">Phone: </small>
+                                        <p>{{ profileData?.phone || "--"}}</p>
+                                        <hr>
+                                        <small class="text-muted">Partner id: </small>
+                                        <p>{{ profileData?.partner_id || "--"}}</p>
+                                        <hr>
+                                        <small class="text-muted">Partner Name: </small>
+                                        <p>{{ profileData?.partner_name || "--"}}</p>
+                                        <hr>
+                                        <small class="text-muted">Total Amount Due </small>
+                                        <p>{{ profileData?.total_amount_due || "0"}}</p>
+                                        <hr>
+                                        <small class="text-muted">Total Invoiced Amount: </small>
+                                        <p>{{ profileData?.total_invoiced_amount || "0"}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

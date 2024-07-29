@@ -1,0 +1,13 @@
+<app-header></app-header>
+<app-sidebar></app-sidebar>
+
+<app-right-sidebar></app-right-sidebar>
+
+@if (!toastr.newLoader) {
+  <div [dir]="direction">
+    <router-outlet></router-outlet>
+  </div>
+  }
+  @if (toastr.newLoader) {
+  <lib-ng-angular-loader [loaderType]="'loader3'"></lib-ng-angular-loader>
+  }

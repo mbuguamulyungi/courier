@@ -1,0 +1,8 @@
+@if (!toastr.newLoader) {
+<div [dir]="direction">
+  <router-outlet></router-outlet>
+</div>
+}
+@if (toastr.newLoader) {
+<lib-ng-angular-loader [loaderType]="'loader3'"></lib-ng-angular-loader>
+}
