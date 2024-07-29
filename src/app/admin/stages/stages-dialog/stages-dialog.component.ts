@@ -2,7 +2,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/materi
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule,} from '@angular/forms';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -11,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
 import { ToastrMessagesService } from '@core/service/toastr-messages.service';
 import { serverUrl } from 'environments/environment';
 import { AuthService } from '@core/service/auth.service';
@@ -45,7 +43,6 @@ export interface DialogData {
 })
 	
 export class StagesDialogComponent implements OnInit {
-
 	action: string;
 	dialogTitle: string;
 	stageForm: UntypedFormGroup;
@@ -62,7 +59,6 @@ export class StagesDialogComponent implements OnInit {
 	) {
 		this.action = data.action;
 		this.selectedStage = data.stage;
-
 		if (this.action === 'edit') {
 			this.dialogTitle = "Edit Stage";
 			this.stageForm = this.updateStageForm();
@@ -100,12 +96,6 @@ export class StagesDialogComponent implements OnInit {
 	setStageValue(stage:any) {
 		this.stageForm.patchValue(stage);
 	}
-
-	// formControl = new UntypedFormControl('', [Validators.required,]);
-	// getErrorMessage() {
-	// 	return this.formControl.hasError('required')
-	// 		? 'Required field': '';
-	// } 
 
 	public confirmAdd(): void {
 		this.submitted = true;

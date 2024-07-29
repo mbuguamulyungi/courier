@@ -91,7 +91,6 @@ export class SidebarComponent implements OnInit {
         if (this.authService.currentUserValue) {
             this.userDetails = this.authService.currentUserValue;
             let  userRole = this.userDetails.roles[0].role;
-            // userRole = userRole.charAt(0).toUpperCase() + userRole.slice(1);
             this.userFullName = this.userDetails.partner_name;
             this.sidebarItems = ROUTES.filter(
                 (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1

@@ -2,7 +2,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/materi
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, UntypedFormControl, FormGroup, FormArray, ValidationErrors, AbstractControl, } from '@angular/forms';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -11,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
 import { ToastrMessagesService } from '@core/service/toastr-messages.service';
 import { serverUrl } from 'environments/environment';
 import { AuthService } from '@core/service/auth.service';
@@ -52,7 +50,7 @@ export interface DialogData {
     styleUrl: './deliveries-dialog.component.scss'
 })
 
-export class DeliveriesDialogComponent {
+export class DeliveriesDialogComponent implements OnInit {
 
     action: string;
     dialogTitle: string;
@@ -102,7 +100,6 @@ export class DeliveriesDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: DialogData,
         private fb: UntypedFormBuilder, private toastr: ToastrMessagesService, private authService: AuthService,
     ) {
-        console.log(data);
         this.action = data.action;
         this.selectedDelivery = data.delivery;
         this.allStages = data.stages;
@@ -119,7 +116,6 @@ export class DeliveriesDialogComponent {
 
     ngOnInit(): void {
         this.sessionId = localStorage.getItem('sessionId');
-        
     }
 
     createDeliveryForm(): UntypedFormGroup {
@@ -191,9 +187,7 @@ export class DeliveriesDialogComponent {
     }
 
 
-    setDeliveryValue(courier: any) {
-        console.log(courier);
-        
+    setDeliveryValue(courier: any) {        
         // Set the form control value
         this.deliveryForm.patchValue(courier);
         
@@ -238,8 +232,6 @@ export class DeliveriesDialogComponent {
 
     public confirmAdd(): void {
         this.submitted = true;
-        console.log(this.deliveryForm);
-
         if (this.deliveryForm.valid) {
             var sendData = this.deliveryForm.value 
 
@@ -265,10 +257,7 @@ export class DeliveriesDialogComponent {
                     'Cookie': 'frontend_lang=en_US;' + this.sessionId
                 },
                 'body': sendData
-            };
-
-            console.log(options);
-            
+            };            
             this.toastr.newLoader = true;
             const endPoint = "api";
             // this.subs.sink = this.authService.sendRequest('post', endPoint, options)
@@ -279,7 +268,6 @@ export class DeliveriesDialogComponent {
             		let body = JSON.parse(res.body)
                     let rawHeaders = res.rawHeaders;	
                     console.log(body);
-                    
             		if (body && body?.result) {
             			this.toastr.showSuccess(body?.result?.message, 'Success');
             		} else {

@@ -1,20 +1,8 @@
 import { DOCUMENT, NgClass } from '@angular/common';
-import {
-    Component,
-    Inject,
-    ElementRef,
-    OnInit,
-    Renderer2,
-} from '@angular/core';
+import { Component, Inject, ElementRef, OnInit, Renderer2, } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfigService } from '@config';
-import {
-    AuthService,
-    InConfiguration,
-    LanguageService,
-    RightSidebarService,
-} from '@core';
-import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { AuthService, InConfiguration, LanguageService, RightSidebarService, } from '@core';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -43,6 +31,7 @@ interface Notifications {
         FeatherIconsComponent,
     ],
 })
+    
 export class HeaderComponent implements OnInit {
     public config!: InConfiguration;
     userImg?: string;
@@ -141,7 +130,7 @@ export class HeaderComponent implements OnInit {
             this.section = 'patient';
         } if (currentUrl.includes('dispatcher')) {
             this.section = 'dispatcher';
-        } else  {
+        } else {
             this.section = 'admin';
         }
 
@@ -156,6 +145,8 @@ export class HeaderComponent implements OnInit {
 
         if (userRole === 'Admin') {
             this.homePage = 'admin/dashboard/main';
+        } else if (userRole === 'Dispatcher') {
+            this.homePage = 'dispatcher/dashboard';
         } else if (userRole === 'Patient') {
             this.homePage = 'patient/dashboard';
         } else if (userRole === 'Doctor') {
