@@ -171,8 +171,6 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
         this.selectedSearch = 'is_record_active';
         this.searchTerm = 'true';        
 
-        console.log(this.selectedSearch, this.searchTerm);
-
         this.getAllDeliveries(this.selectedSearch, this.searchTerm);
 
         this.searchControl.valueChanges.subscribe((searchTerm: any) => {

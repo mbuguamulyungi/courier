@@ -73,7 +73,7 @@ export class DeliveriesDialogComponent implements OnInit {
         { id: 11, name: 'Stephen' }
     ]
 
-    deliveryType = ['Domestic', 'International','local' ]
+    deliveryType = ['Domestic', 'International','Local','False' ]
 
     tagList: any = [
         { id: 1, value: 'Blitz Couriers' },
@@ -103,7 +103,8 @@ export class DeliveriesDialogComponent implements OnInit {
         this.action = data.action;
         this.selectedDelivery = data.delivery;
         this.allStages = data.stages;
-
+        console.log(this.allStages);
+        
         if (this.action === 'edit') {
             this.dialogTitle = "Edit Delivery";
             this.deliveryForm = this.updateDeliveryForm();
@@ -191,7 +192,10 @@ export class DeliveriesDialogComponent implements OnInit {
     }
 
 
-    setDeliveryValue(courier: any) {        
+    setDeliveryValue(courier: any) {      
+        
+        console.log(courier);
+        
         // Set the form control value
         this.deliveryForm.patchValue(courier);
         
@@ -206,8 +210,8 @@ export class DeliveriesDialogComponent implements OnInit {
         this.assignUser.push({ id: courier.assigned_user.id, name: courier.assigned_user.name });
         this.deliveryForm.controls['assigned_user_id'].setValue(courier.assigned_user.id)
 
-        this.deliveryType.push(courier.courier_type)
-        this.deliveryForm.controls['courier_type'].setValue(courier.courier_type)
+        this.deliveryType.push(courier.courier_type.toString())
+        this.deliveryForm.controls['courier_type'].setValue(courier.courier_type.toString())
 
         if (courier.category_id && Object.keys(courier.category_id).length == 0 ) {
             // this.categories.push({ id: courier.category_id, name: courier.category_id } )
@@ -227,8 +231,8 @@ export class DeliveriesDialogComponent implements OnInit {
         }
 
         if (courier.stage ) {
-            let selectStage = this.allStages.filter((stage: any) => stage.id == courier.stage.id);
-            this.deliveryForm.controls['stage_id'].setValue(selectStage[0].id)
+            let selectStage = this.allStages.filter((stage: any) => stage?.id == courier?.stage?.id);
+            this.deliveryForm.controls['stage_id'].setValue(selectStage[0]?.id)
         }
 
         console.log(this.deliveryForm);
