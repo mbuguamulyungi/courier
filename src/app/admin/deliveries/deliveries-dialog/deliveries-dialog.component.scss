@@ -5,3 +5,8 @@
     width: 1200px;
     height: 600px;
 }
+
+.readonly-checkbox {
+    pointer-events: none;
+    // opacity: 0.6; /* Optional: makes it look disabled */
+  }

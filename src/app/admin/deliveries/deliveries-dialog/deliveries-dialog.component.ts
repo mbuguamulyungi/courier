@@ -108,7 +108,11 @@ export class DeliveriesDialogComponent implements OnInit {
             this.dialogTitle = "Edit Delivery";
             this.deliveryForm = this.updateDeliveryForm();
             this.setDeliveryValue(this.selectedDelivery)
-        } else {
+        } else if (this.action === 'view') {
+            this.dialogTitle = "View Delivery";
+            this.deliveryForm = this.updateDeliveryForm();
+            this.setDeliveryValue(this.selectedDelivery)
+        } else  {
             this.dialogTitle = 'Add Delivery';
             this.deliveryForm = this.createDeliveryForm();
         }
@@ -230,7 +234,7 @@ export class DeliveriesDialogComponent implements OnInit {
         console.log(this.deliveryForm);
     }
 
-    public confirmAdd(): void {
+    public confirmSave(): void {
         this.submitted = true;
         if (this.deliveryForm.valid) {
             var sendData = this.deliveryForm.value 
@@ -238,6 +242,10 @@ export class DeliveriesDialogComponent implements OnInit {
             const deliveryDate = this.deliveryForm.value.delivery_date;
             const formattedDate = moment(deliveryDate).format('YYYY-MM-DD');
             sendData.delivery_date = formattedDate;
+
+            sendData.created_date = new Date();
+            const createdDate = sendData.created_date.toISOString().split('T')[0];
+            sendData.created_date = createdDate;
 
             let method;
             let endPointUrl;
@@ -258,6 +266,7 @@ export class DeliveriesDialogComponent implements OnInit {
                 },
                 'body': sendData
             };            
+            
             this.toastr.newLoader = true;
             const endPoint = "api";
             // this.subs.sink = this.authService.sendRequest('post', endPoint, options)

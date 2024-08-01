@@ -31,6 +31,13 @@ export const ADMIN_ROUTE: Route[] = [
             ),
     },
     {
+        path: 'sales-orders',
+        loadChildren: () =>
+            import('./salesOrder/salesorder.routes').then(
+                (m) => m.SALES_ORDER_ROUTE
+            ),
+    },
+    {
         path: 'doctors',
         loadChildren: () =>
             import('./doctors/doctors.routes').then((m) => m.DOCTOR_ROUTE),

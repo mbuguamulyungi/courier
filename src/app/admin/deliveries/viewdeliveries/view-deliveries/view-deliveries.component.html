@@ -14,20 +14,91 @@
                                 <li class="tbl-title">
                                     <h2>Deliveries</h2>
                                 </li>
-                                <!-- <li class="tbl-search-box">
-                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
-                                        aria-label="Search box">
-                                </li> -->
                                 <li class="tbl-search-box mt-4">
                                     <div class="date-picker-main">
-                                        <mat-form-field appearance="fill">
-                                            <mat-label>Search Date</mat-label>
-                                            <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" placeholder="Choose a date">
-                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker></mat-datepicker>
-                                        </mat-form-field>
-                                       
+                                        <div class="serch-reset d-flex align-items-center">
+                                            <mat-form-field appearance="fill" class="mr-3">
+                                                <mat-label>Select Filter Option</mat-label>
+                                                <mat-select name="select" [formControl]="filterControl">
+                                                    <mat-option *ngFor="let options of filters" [value]="options" (click)="onSelectOptions(options)">
+                                                        <p class="capitalize">{{options}}</p>
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>&nbsp;&nbsp;
+
+                                            @if(selectedSearch && (selectedSearch == 'delivery_date')){
+                                                <mat-form-field appearance="fill"  class="mr-3">
+                                                    <mat-label>Search Date</mat-label>
+                                                    <input matInput [matDatepicker]="picker" [formControl]="searchControl" placeholder="Choose a date">
+                                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                    <mat-datepicker #picker></mat-datepicker>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            
+                                            @if(selectedSearch && (selectedSearch == 'is_record_active' || selectedSearch == 'is_drop_shipping')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        <mat-option value="true">
+                                                        True
+                                                        </mat-option>
+                                                        <mat-option value="false">
+                                                            False
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            @if(selectedSearch && (selectedSearch == 'stage_id')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        @for (stage of statusData; track stage) {
+                                                            <mat-option [value]="stage.id" >{{stage.stage_name}} </mat-option>
+                                                            }
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            @if(selectedSearch && (selectedSearch == 'assigned_user_id')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        @for (user of assignUser; track user) {
+                                                            <mat-option [value]="user.id" >{{user.name}} </mat-option>
+                                                            }
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            @if(selectedSearch && (selectedSearch == 'courier_type')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        @for (type of deliveryType; track type) {
+                                                            <mat-option [value]="type" >{{type}} </mat-option>
+                                                            }
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            @if(selectedSearch && (selectedSearch == 'priority_id')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        @for (Priority of priorities; track Priority) {
+                                                            <mat-option [value]="Priority.id" >{{Priority.name}} </mat-option>
+                                                            }
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                            @if(selectedSearch && (selectedSearch == 'category_id')){
+                                                <mat-form-field appearance="fill"   class="mr-3">
+                                                    <mat-label>Select Filter Value</mat-label>
+                                                    <mat-select name="filter" [formControl]="searchControl">
+                                                        @for (category of categories; track category) {
+                                                            <mat-option [value]="category.id" >{{category.name}} </mat-option>
+                                                            }
+                                                    </mat-select>
+                                                </mat-form-field>&nbsp;&nbsp;
+                                            }
+                                        </div>
                                     </div>
                                 </li>&nbsp;&nbsp;
                                 <button mat-raised-button color="accent" (click)="resetFilter()">Reset Filter</button>
@@ -79,18 +150,16 @@
                     <div class="body overflow-auto">
                         <div class="responsive_table" [style.display]="!isGridView ? 'none' : 'block'">
                             <div class="col-md-12 d-flex justify-content-between" cdkDropListGroup>
-                                <div *ngFor="let stage of stages; let i = index; trackBy: trackByStage"
+                                <div *ngFor="let stage of statusData; let i = index; trackBy: trackByStage"
                                     class="col-md-2 kanban-card">
                                     <div class="d-flex justify-content-between align-items-center mb-2 header">
-                                        <h2 *ngIf="editingStageIndex !== i">{{ stage }}</h2>
-                  
+                                        <h2 *ngIf="editingStageIndex !== i">{{ stage.stage_name }}</h2>
                                         <i class="fa fa-plus cursor-pointer" (click)="startEdit(i)"></i>
                                     </div>
                         
-                                    <div cdkDropList [cdkDropListData]="getValueForLoop(dataSource.filteredData, stage)"
-                                        class="example-list" [cdkDropListConnectedTo]="getConnectedLists()"
-                                        (cdkDropListDropped)="drop($event, stage)">
-                                        <div *ngFor="let item of getValueForLoop(dataSource.filteredData, stage); trackBy: trackByItem" cdkDrag>
+                                    <div cdkDropList [cdkDropListData]="getValueForLoop(dataSource.filteredData, stage.stage_name)"
+                                        class="example-list" [cdkDropListConnectedTo]="getConnectedLists()" (cdkDropListDropped)="drop($event, stage)">
+                                        <div *ngFor="let item of getValueForLoop(dataSource.filteredData, stage.stage_name); trackBy: trackByItem" cdkDrag>
                                                 <div class="d-flex justify-content-between">
                                                     <div>
                                                         <div>
@@ -199,6 +268,10 @@
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                                        <button mat-icon-button (click)="view(row)" class="tbl-action-btn">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
+                  
                                         <button mat-icon-button  (click)="editCall(row)" class="tbl-action-btn">
                                             <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                                         </button>
@@ -211,9 +284,9 @@
                                 <ng-container matColumnDef="sales_order">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Create  Sales Order </mat-header-cell>
                                     <mat-cell *matCellDef="let row">
-                                        <button mat-raised-button color="primary" (click)="createSalesOrder(row.id)">Sales Order</button>
+                                        <button mat-raised-button color="primary" [disabled]="row.stage.name != 'Edited' || row.sales_order?.id" (click)="createSalesOrder(row.id)">Sales Order</button>
                                     </mat-cell>      
-                                </ng-container>
+                                </ng-container>                                
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->

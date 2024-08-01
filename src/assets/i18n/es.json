@@ -32,6 +32,12 @@
         "VIEW-DELIVERIES": "Ver etapas"
       }
     },
+    "SALESORDER": {
+      "TEXT": "Sales Orders",  
+      "LIST": {
+        "VIEW-SALESORDER": "Sales Order List"
+      }
+    },
     "DOCTORS": {
       "TEXT": "Doctoras",
       "LIST": {

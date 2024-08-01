@@ -48,12 +48,7 @@ import { ToastrMessagesService } from '@core/service/toastr-messages.service';
 })
 export class AllStagesComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
 
-    displayedColumns = [
-        'id',
-        'stage_name',
-        'stage_sequence',
-        'actions',
-    ];
+    displayedColumns:any = [];
 
     // exampleDatabase?: DoctorsService;
     selection = new SelectionModel<Doctors>(true, []);
@@ -99,7 +94,7 @@ export class AllStagesComponent extends UnsubscribeOnDestroyAdapter implements O
     getStages() {
         var options = {
             method: 'GET',
-            url: serverUrl + 'api/v1/naidash/stage/',
+            url: serverUrl + 'api/v1/naidash/stage?search=all',
             headers: {
                 'Content-Type': 'application/json',
                 Cookie: 'frontend_lang=en_US;' + this.sessionId,
@@ -112,6 +107,21 @@ export class AllStagesComponent extends UnsubscribeOnDestroyAdapter implements O
                 let body = JSON.parse(res.body);
                 this.statusData = [];
                 this.statusData = body.result.data;
+                console.log(this.statusData);
+
+                 // Check if 'activate_stage' exists in any of the data
+                 const hasActivateStage = this.statusData.some((row:any) => row.hasOwnProperty('activate_stage'));
+
+                 // Update displayedColumns based on the presence of 'activate_stage'
+                 this.displayedColumns = [
+                     'id',
+                     'stage_name',
+                     'stage_sequence',
+                     ...(hasActivateStage ? ['status'] : []),
+                     'actions'
+                 ];
+                
+                
                 this.dataSource = new MatTableDataSource(this.statusData);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -159,6 +169,25 @@ export class AllStagesComponent extends UnsubscribeOnDestroyAdapter implements O
         });
         this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
             if (result == 'success') this.ngOnInit() ; else  {} 
+        });
+    }
+
+    view(row: any) {
+        let tempDirection: Direction;
+        if (localStorage.getItem('isRtl') === 'true') {
+            tempDirection = 'rtl';
+        } else {
+            tempDirection = 'ltr';
+        }
+        const dialogRef = this.dialog.open(StagesDialogComponent, {
+            data: {
+                stage: row,
+                action: 'view',
+            },
+            direction: tempDirection,
+        });
+        this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+            // if (result == 'success') this.ngOnInit() ; else  {} 
         });
     }
 

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition, } from '@angular/material/snack-bar';
-import { MAT_DATE_LOCALE, MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Direction } from '@angular/cdk/bidi';
 import { UnsubscribeOnDestroyAdapter, } from '@shared';
@@ -27,6 +27,9 @@ import { DeliveriesDialogComponent } from '../../deliveries-dialog/deliveries-di
 import { ToastrMessagesService } from '@core/service/toastr-messages.service';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { StagesDialogComponent } from 'app/admin/stages/stages-dialog/stages-dialog.component';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'app-view-deliveries',
@@ -55,10 +58,11 @@ import { MatInputModule } from '@angular/material/input';
         MatInputModule,
         MatNativeDateModule,
         CommonModule,
-
+        ReactiveFormsModule,
+        MatOptionModule, MatSelectModule,
     ],
 })
-    
+
 export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
     displayedColumns = [
         'select',
@@ -92,8 +96,58 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
     @ViewChild(MatSort, { static: true }) sort!: MatSort;
     @ViewChild('filter', { static: true }) filter?: ElementRef;
 
+    selectedSearch: any = 'is_record_active';
+    searchTerm: any = 'true';
+
+    filterControl = new FormControl('Record Active');
+    searchControl = new FormControl('true');
+
     toggleView() {
         this.isGridView = !this.isGridView;
+    }
+
+    assignUser = [
+        { id: 1, name: 'Stephen' }
+    ]
+    deliveryType = [ 'domestic' ,'international' ]
+    categories = [
+        { id: 1, name: 'Major' },
+        { id: 2, name: 'Minor' }
+    ]
+    priorities = [
+        { id: 1, name: 'Yes' },
+        { id: 2, name: 'No' }
+    ]
+
+    filters = [
+        // 'Phone',
+        'Delivery Date',
+        'Assigned User',
+        'Stage',
+        'Priority',
+        'Category',
+        'Courier Type',
+        'Drop Shipping',
+        'Record Active'
+    ];
+
+    onSelectOptions(option: any) {
+        // Define a mapping object
+        const optionMap: { [key: string]: string } = {
+            'Record Active': 'is_record_active',
+            'Drop Shipping': 'is_drop_shipping',
+            'Delivery Date': 'delivery_date',
+            'Assigned User': 'assigned_user_id',
+            'Stage': 'stage_id',
+            'Priority': 'priority_id',
+            'Category': 'category_id',
+            'Courier Type': 'courier_type',
+            // 'Phone': 'phone'
+        };
+
+        // Set the selected search based on the option
+        this.selectedSearch = optionMap[option] || '';
+        this.searchControl.setValue('');
     }
 
     constructor(
@@ -113,13 +167,59 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
         this.userInfo = localStorage.getItem('currentUser');
         this.userInfo = JSON.parse(this.userInfo || '');
         this.sessionId = localStorage.getItem('sessionId');
-        this.getAllDeliveries();
+
+        this.getAllDeliveries(this.selectedSearch, this.searchTerm);
+
+        this.searchControl.valueChanges.subscribe((searchTerm: any) => {
+            if (searchTerm) {
+                let formattedDate: string | null = null;
+             if (this.isValidDate(searchTerm)) {
+                // If searchTerm is a Date object or a date string
+                if (searchTerm instanceof Date) {
+                    // Convert to 'YYYY-MM-DD' format directly
+                    formattedDate = this.formatDate(searchTerm);
+                } else {
+                    // Convert string to Date and then to 'YYYY-MM-DD' format
+                    formattedDate = this.formatDate(new Date(searchTerm));
+                }
+                searchTerm = formattedDate;
+                this.getAllDeliveries(this.selectedSearch, searchTerm);
+            } else {
+                    this.getAllDeliveries(this.selectedSearch, searchTerm);
+                }
+            }
+        });
     }
 
-    getAllDeliveries() {
+     // Function to check if input is a valid date
+     isValidDate(dateInput: any): boolean {
+        let dateObject: Date;
+        
+        if (dateInput instanceof Date) {
+            dateObject = dateInput;
+        } else if (typeof dateInput === 'string') {
+            const parsedDate = Date.parse(dateInput);
+            dateObject = new Date(parsedDate);
+        } else {
+            return false;
+        }
+        
+        return !isNaN(dateObject.getTime());
+    }
+
+    // Function to format Date object to 'YYYY-MM-DD'
+    formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+
+    getAllDeliveries(selectedSearch: any, searchTerm: any) {
         var options = {
             method: 'GET',
-            url: serverUrl + 'api/v1/naidash/courier?is_record_active=true',
+            url: serverUrl + 'api/v1/naidash/courier?' + selectedSearch + '=' + searchTerm,
             headers: {
                 'Content-Type': 'application/json',
                 Cookie: 'frontend_lang=en_US;' + this.sessionId,
@@ -129,8 +229,10 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
         const endPoint = 'api';
         this.authService.sendRequest('post', endPoint, options).subscribe({
             next: (res: any) => {
-                let body = JSON.parse(res.body);
-                this.deliveryData = body.result.data;
+                let body = JSON.parse(res?.body);
+                this.deliveryData = body?.result?.data;
+                console.log(this.deliveryData);
+                
                 this.dataSource.data = this.deliveryData; // Set data directly to dataSource
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
@@ -185,7 +287,7 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
             direction: tempDirection,
         });
         this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-                console.log(result);
+            console.log(result);
         });
     }
 
@@ -206,7 +308,28 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
             direction: tempDirection,
         });
         this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);         
+            console.log(result);
+        });
+    }
+
+    view(row: any) {
+        this.id = row.id;
+        let tempDirection: Direction;
+        if (localStorage.getItem('isRtl') === 'true') {
+            tempDirection = 'rtl';
+        } else {
+            tempDirection = 'ltr';
+        }
+        const dialogRef = this.dialog.open(DeliveriesDialogComponent, {
+            data: {
+                delivery: row,
+                action: 'view',
+                stages: this.statusData
+            },
+            direction: tempDirection,
+        });
+        this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
         });
     }
 
@@ -229,31 +352,51 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
     }
 
     createSalesOrder(courierId: any) {
-        console.log(courierId);
-    }
-
-    onDateChange(event: MatDatepickerInputEvent<Date>) {
-        let selectedDate = event.value;
-        this.search(selectedDate);
-    }
-
-    search(date: any) {
-        if (date) {
-            const filteredData = this.deliveryData.filter((delivery: any) => {
-                const deliveryDate = new Date(delivery.delivery_date);
-                return deliveryDate.toDateString() === date.toDateString();
-            });
-            this.dataSource.data = filteredData;
-        } else {
-            this.dataSource.data = this.deliveryData;
+        var sendData: any = {
+            courier_id: courierId,
         }
+        let options = {
+            'method': 'POST',
+            'url': serverUrl + 'api/v1/naidash/sale',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Cookie': 'frontend_lang=en_US;' + this.sessionId
+            },
+            'body': sendData
+        };
+
+        // this.toastr.newLoader = true;
+        const endPoint = "api";
+        // this.subs.sink = this.authService.sendRequest('post', endPoint, options)
+        this.authService.sendRequest('post', endPoint, options)
+            .subscribe({
+                next: (res) => {
+                    this.toastr.newLoader = false;
+                    let body = JSON.parse(res.body)
+                    let rawHeaders = res.rawHeaders;
+                    console.log(body);
+                    if (body && body?.result) {
+                        this.toastr.showSuccess(body?.result?.message, 'Success');
+                    } else {
+                        this.toastr.showError(body?.error?.data?.message, 'Error');
+                    }
+
+                },
+                error: (error) => {
+                    this.toastr.newLoader = false;
+                    this.toastr.showError(error.message, 'Error');
+                },
+            });
     }
 
     resetFilter() {
-        this.dataSource.data = this.deliveryData; // Show all data
-        if (this.filter) {
-            this.filter.nativeElement.value = ''; // Clear the input field
-        }
+        this.selectedSearch = 'is_record_active';
+        this.searchTerm = 'true';
+
+        this.filterControl.setValue('Record Active');
+        this.searchControl.setValue('true');
+
+        this.getAllDeliveries(this.selectedSearch, this.searchControl.value);
     }
 
     showNotification(
@@ -286,7 +429,7 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
         return this.stages.map((stage) => `cdk-drop-list-${stage.name}`);
     }
 
-    drop(event: CdkDragDrop<any[]>, stage: string) {
+    drop(event: CdkDragDrop<any[]>, stage: any) {
         if (event.previousContainer === event.container) {
             moveItemInArray(
                 event.container.data,
@@ -295,7 +438,8 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
             );
         } else {
             const item = event.previousContainer.data[event.previousIndex];
-            item.stage = stage;
+            item.stage.id = stage.id;
+            item.stage.name = stage.stage_name;
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
@@ -307,10 +451,59 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
     }
 
     updateItemStage(item: any) {
-        console.log('Item updated successfully', item);
+        let options = {
+            'method': 'PATCH',
+            'url': serverUrl + 'api/v1/naidash/courier/' + item.id,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Cookie': 'frontend_lang=en_US;' + this.sessionId
+            },
+            'body': item
+        };
+        // this.toastr.newLoader = true;
+        const endPoint = "api";
+        // this.subs.sink = this.authService.sendRequest('post', endPoint, options)
+        this.authService.sendRequest('post', endPoint, options)
+            .subscribe({
+                next: (res) => {
+                    this.toastr.newLoader = false;
+                    let body = JSON.parse(res.body)
+                    let rawHeaders = res.rawHeaders;
+                    if (body && body?.result) {
+                        this.toastr.showSuccess(body?.result?.message, 'Success');
+                        this.ngOnInit();
+                    } else {
+                        this.toastr.showError(body?.error?.data?.message, 'Error');
+
+                    }
+                },
+                error: (error) => {
+                    this.toastr.newLoader = false;
+                    this.toastr.showError(error.message, 'Error');
+                },
+            });
+
+
     }
 
     startEdit(index: number) {
+        let tempDirection: Direction;
+        if (localStorage.getItem('isRtl') === 'true') {
+            tempDirection = 'rtl';
+        } else {
+            tempDirection = 'ltr';
+        }
+        const dialogRef = this.dialog.open(StagesDialogComponent, {
+            data: {
+                stage: '',
+                action: 'add',
+            },
+            direction: tempDirection,
+        });
+        this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+            if (result == 'success') this.ngOnInit(); else { }
+        });
+
         // this.editingStageIndex = index;
         // this.originalStageName = this.stages[index];
     }
@@ -352,7 +545,6 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
     //         const index = this.dataSource?.renderedData.findIndex(
     //             (d) => d === item
     //         );
-    //         // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //         if (index !== undefined) {
     //             if (this.exampleDatabase) {
     //                 this.exampleDatabase.dataChange.value.splice(index, 1);

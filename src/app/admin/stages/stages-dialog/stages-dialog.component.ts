@@ -13,6 +13,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ToastrMessagesService } from '@core/service/toastr-messages.service';
 import { serverUrl } from 'environments/environment';
 import { AuthService } from '@core/service/auth.service';
+import { CommonModule } from '@angular/common';
 
 export interface DialogData {
 	id: number;
@@ -36,7 +37,8 @@ export interface DialogData {
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule,
 		MatCheckboxModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		CommonModule
 	],
 	templateUrl: './stages-dialog.component.html',
 	styleUrl: './stages-dialog.component.scss'
@@ -63,7 +65,12 @@ export class StagesDialogComponent implements OnInit {
 			this.dialogTitle = "Edit Stage";
 			this.stageForm = this.updateStageForm();
 			this.setStageValue(this.selectedStage)
-		} else {
+
+		} else if (this.action === 'view') { 
+			this.dialogTitle = "View Stage";
+			this.stageForm = this.updateStageForm();
+			this.setStageValue(this.selectedStage)
+		}else {
 			this.dialogTitle = 'Add Stage';
 			this.stageForm = this.createStageForm();
 		}

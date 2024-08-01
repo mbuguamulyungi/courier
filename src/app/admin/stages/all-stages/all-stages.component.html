@@ -85,11 +85,33 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Stage Sequence</mat-header-cell>
                     <mat-cell *matCellDef="let row"> <span class="mobile-label">Name:</span>{{row.stage_sequence}}</mat-cell>
                   </ng-container>
+
+                    <ng-container matColumnDef="status">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                      </mat-header-cell>
+                      <mat-cell mat-cell *matCellDef="let row">
+                        <span class="mobile-label">Status:</span>
+                        @if (row.activate_stage === true) {
+                        <div>
+                          <span class="badge badge-solid-green">Active</span>
+                        </div>
+                        }
+                        @if (row.activate_stage === false) {
+                        <div>
+                          <span class="badge badge-solid-orange">Inactive</span>
+                        </div>
+                        }
+                      </mat-cell>
+                    </ng-container>
     
                   <!-- actions -->
                   <ng-container matColumnDef="actions">
                     <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                     <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                      <button mat-icon-button [disabled]="userRole != 'Admin'" (click)="$event.stopPropagation()" (click)="view(row)" class="tbl-action-btn">
+                          <i class="material-icons">visibility</i>
+                      </button>
+
                       <button mat-icon-button [disabled]="userRole != 'Admin'" (click)="$event.stopPropagation()" (click)="editCall(row)" class="tbl-action-btn">
                         <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                       </button>
@@ -105,7 +127,7 @@
                   </mat-row>
                 </table>
 
-                <mat-paginator #paginator [length]="dataSource?.data?.length" [pageIndex]="0" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]">
+                <mat-paginator #paginator [length]="dataSource?.data?.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5,10, 25, 100]">
                 </mat-paginator>
 
                 @if(dataSource?.data?.length == 0){

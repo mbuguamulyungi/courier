@@ -32,6 +32,12 @@
         "VIEW-STAGES": "All Stages"
       }
     },
+    "SALESORDER": {
+      "TEXT": "Sales Orders",  
+      "LIST": {
+        "VIEW-SALESORDER": "Sales Order List"
+      }
+    },
     "DISPATCHER": {
       "TEXT": "Dispatcher", 
       "VIEW-STAGES": "All Stages",

@@ -8,6 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from '@shared/components/profile/profile.component';
 import { AllStagesComponent } from 'app/admin/stages/all-stages/all-stages.component';
 import { ViewDeliveriesComponent } from 'app/admin/deliveries/viewdeliveries/view-deliveries/view-deliveries.component';
+import { SalesOrderListComponent } from 'app/admin/salesOrder/sales-order-list/sales-order-list.component';
 export const DOCTOR_ROUTE: Route[] = [
   {
     path: 'dashboard',
@@ -18,6 +19,9 @@ export const DOCTOR_ROUTE: Route[] = [
   },
   {
     path: 'deliveries/viewDeliveries', component: ViewDeliveriesComponent
+  },
+  {
+    path: 'sales-orders/sales-orders', component: SalesOrderListComponent
   },
   {
     path: 'appointments',

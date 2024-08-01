@@ -158,7 +158,7 @@ export const ROUTES: RouteInfo[] = [
         path: '',
         title: 'MENUITEMS.STAGES.TEXT',
         iconType: 'material-icons-outlined',
-        icon: 'local_shipping',
+        icon: 'local_hospital',
         class: 'menu-toggle',
         groupTitle: false,
         badge: '',
@@ -168,6 +168,33 @@ export const ROUTES: RouteInfo[] = [
             {
                 path: '/admin/stages/allStages',
                 title: 'MENUITEMS.STAGES.LIST.VIEW-STAGES',
+                iconType: '',
+                icon: '',
+                class: 'ml-menu',
+                groupTitle: false,
+                badge: '',
+                badgeClass: '',
+                role: [''],
+                submenu: [],
+            },
+        ],
+    },
+
+    // Sales Orders
+    {
+        path: '',
+        title: 'MENUITEMS.SALESORDER.TEXT',
+        iconType: 'material-icons-outlined',
+        icon: 'local_mall',
+        class: 'menu-toggle',
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['Admin'],
+        submenu: [
+            {
+                path: '/admin/sales-orders/sales-orders',
+                title: 'MENUITEMS.SALESORDER.LIST.VIEW-SALESORDER',
                 iconType: '',
                 icon: '',
                 class: 'ml-menu',
@@ -657,8 +684,8 @@ export const ROUTES: RouteInfo[] = [
         ],
     },
 
-      //Dispatcher Modules
-      {
+    //Dispatcher Modules
+    {
         path: '/dispatcher/dashboard',
         title: 'MENUITEMS.DISPATCHER.DASHBOARD',
         iconType: 'material-icons-outlined',
@@ -671,12 +698,12 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
     },
 
-        //Stages
+    //Stages
     {
         path: '',
         title: 'MENUITEMS.STAGES.TEXT',
         iconType: 'material-icons-outlined',
-        icon: 'local_shipping',
+        icon: 'local_hospital',
         class: 'menu-toggle',
         groupTitle: false,
         badge: '',
@@ -697,8 +724,8 @@ export const ROUTES: RouteInfo[] = [
             },
         ],
     },
-       //Deliveries
-       {
+    //Deliveries
+    {
         path: '',
         title: 'MENUITEMS.DELIVERIES.TEXT',
         iconType: 'material-icons-outlined',
@@ -712,6 +739,32 @@ export const ROUTES: RouteInfo[] = [
             {
                 path: '/dispatcher/deliveries/viewDeliveries',
                 title: 'MENUITEMS.DELIVERIES.LIST.VIEW-DELIVERIES',
+                iconType: '',
+                icon: '',
+                class: 'ml-menu',
+                groupTitle: false,
+                badge: '',
+                badgeClass: '',
+                role: [''],
+                submenu: [],
+            },
+        ],
+    },
+    // Sales Orders
+    {
+        path: '',
+        title: 'MENUITEMS.SALESORDER.TEXT',
+        iconType: 'material-icons-outlined',
+        icon: 'local_mall',
+        class: 'menu-toggle',
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['Dispatcher'],
+        submenu: [
+            {
+                path: '/dispatcher/sales-orders/sales-orders',
+                title: 'MENUITEMS.SALESORDER.LIST.VIEW-SALESORDER',
                 iconType: '',
                 icon: '',
                 class: 'ml-menu',
