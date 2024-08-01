@@ -137,7 +137,7 @@
                                 <mat-label>Courier Type</mat-label>
                                 <mat-select formControlName="courier_type" >
                                     @for (type of deliveryType; track type) {
-                                    <mat-option [value]="type" [disabled]="action == 'view'">{{type}} </mat-option>
+                                    <mat-option [value]="type?.toLowerCase()" [disabled]="action == 'view'">{{type}} </mat-option>
                                     }
                                 </mat-select>
                             </mat-form-field>

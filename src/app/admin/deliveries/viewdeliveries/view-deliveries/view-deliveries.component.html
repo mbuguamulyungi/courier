@@ -160,7 +160,7 @@
                                     <div cdkDropList [cdkDropListData]="getValueForLoop(dataSource.filteredData, stage.stage_name)"
                                         class="example-list" [cdkDropListConnectedTo]="getConnectedLists()" (cdkDropListDropped)="drop($event, stage)">
                                         <div *ngFor="let item of getValueForLoop(dataSource.filteredData, stage.stage_name); trackBy: trackByItem" cdkDrag>
-                                                <div class="d-flex justify-content-between">
+                                                <div class="d-flex justify-content-between" (click)="editCall(item)">
                                                     <div>
                                                         <div>
                                                             <h3 class="inner-item">{{item.name}}</h3>
@@ -268,14 +268,14 @@
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                                     <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button (click)="view(row)" class="tbl-action-btn">
+                                        <!-- <button mat-icon-button (click)="view(row)" class="tbl-action-btn">
                                             <i class="material-icons">visibility</i>
-                                        </button>
+                                        </button> -->
                   
-                                        <button mat-icon-button  (click)="editCall(row)" class="tbl-action-btn">
+                                        <button mat-icon-button  (click)="editCall(row); $event.stopPropagation()"  class="tbl-action-btn">
                                             <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                                         </button>
-                                        <button mat-icon-button  (click)="deleteItem(row)" class="tbl-action-btn">
+                                        <button mat-icon-button  (click)="deleteItem(row); $event.stopPropagation()" class="tbl-action-btn">
                                             <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                     </mat-cell>
@@ -290,7 +290,7 @@
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
-                                <mat-row *matRowDef="let row; columns: displayedColumns;"  [style.cursor]="'pointer'" matRipple> </mat-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="view(row)" [style.cursor]="'pointer'" matRipple> </mat-row>
                             </table>
 
                                 <!-- Paginator -->

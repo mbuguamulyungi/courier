@@ -168,6 +168,11 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
         this.userInfo = JSON.parse(this.userInfo || '');
         this.sessionId = localStorage.getItem('sessionId');
 
+        this.selectedSearch = 'is_record_active';
+        this.searchTerm = 'true';        
+
+        console.log(this.selectedSearch, this.searchTerm);
+
         this.getAllDeliveries(this.selectedSearch, this.searchTerm);
 
         this.searchControl.valueChanges.subscribe((searchTerm: any) => {
@@ -469,6 +474,8 @@ export class ViewDeliveriesComponent extends UnsubscribeOnDestroyAdapter impleme
                     this.toastr.newLoader = false;
                     let body = JSON.parse(res.body)
                     let rawHeaders = res.rawHeaders;
+                    console.log(body);
+                    
                     if (body && body?.result) {
                         this.toastr.showSuccess(body?.result?.message, 'Success');
                         this.ngOnInit();

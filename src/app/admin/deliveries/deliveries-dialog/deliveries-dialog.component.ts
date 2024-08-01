@@ -60,20 +60,20 @@ export class DeliveriesDialogComponent implements OnInit {
     selectedDelivery: any
 
     senderName = [
-        { id: 1, name: 'Dustin' },
-        { id: 2, name: 'Hopper' }
+        { id: 58, name: 'Dustin' },
+        { id: 31, name: 'Hopper' }
     ]
 
     receiverName = [
-        { id: 1, name: 'Jake' },
-        { id: 2, name: 'Meave' }
+        { id: 55, name: 'Jake' },
+        { id: 19, name: 'Meave' }
     ]
 
     assignUser = [
-        { id: 1, name: 'Stephen' }
+        { id: 11, name: 'Stephen' }
     ]
 
-    deliveryType = [ 'Domestic' ,'International' ]
+    deliveryType = ['Domestic', 'International','local' ]
 
     tagList: any = [
         { id: 1, value: 'Blitz Couriers' },
@@ -90,7 +90,7 @@ export class DeliveriesDialogComponent implements OnInit {
     ]
 
     priorities = [
-        { id: 10, name: 'Yes' },
+        { id: 1, name: 'Yes' },
         { id: 2, name: 'No' }
     ]
     allStages: any;
