@@ -41,7 +41,8 @@
               "fast-deep-equal",
               "rfdc",
               "moment",
-              "bezier-easing"
+              "bezier-easing",
+              "mapbox-gl"
             ],
             "inlineStyleLanguage": "scss",
             "assets": [
